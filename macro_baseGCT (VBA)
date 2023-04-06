@@ -1,0 +1,33 @@
+Option Explicit
+Sub Macro1()
+    Dim numObras As Integer, aba As Integer
+    Dim obra As String, consumido As Double, restante As Double
+    
+    numObras = ActiveWorkbook.Sheets.Count
+    Sheets.Add(After:=Sheets(numObras)).Name = "Consolidado"
+    
+    For aba = 1 To numObras
+        Sheets(aba).Select
+        Range("1:1").EntireRow.Insert
+        Range("A1").Value = "Chave"
+        Range("B1").Value = "Valor"
+        
+        obra = ActiveSheet.Name
+        consumido = Range("B14").Value
+        restante = 1 - consumido
+        
+        Sheets("Consolidado").Select
+        Sheets("Consolidado").Cells(aba, 1).Value = obra
+        Sheets("Consolidado").Cells(aba, 2).Value = consumido
+        Sheets("Consolidado").Cells(aba, 3).Value = restante
+        
+    Next aba
+    
+    Sheets("Consolidado").Select
+    Range("1:1").EntireRow.Insert
+    Range("A1").Value = "Obra"
+    Range("B1").Value = "Consumido"
+    Range("C1").Value = "Restante"
+    Sheets("Consolidado").Range("A1:C1").Columns.AutoFit
+    
+End Sub
