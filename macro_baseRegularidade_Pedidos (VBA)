@@ -1,0 +1,44 @@
+Option Explicit
+Sub Macro1()
+
+Dim linhaUm As Integer
+
+    ' COPIAR OS DADOS BRUTOS E SALVAR NUMA OUTRA SHEET
+    Range(Range(Range("A1"), Range("A1").End(xlToRight).Address), Range(Range("A1"), Range("A1").End(xlDown).Address)).Select
+    Selection.Copy
+        Sheets.Add After:=Sheets(1)
+        'Sheets(2).Name = "Regularidade - Relatório Completo"
+        Range("A1").Select
+        ActiveSheet.Paste
+
+' FAZER O TRATAMMENTO DE DADOS MAS COM UMA CONDICINAL PARA VER QUAL LINHA N POSSUI ALGUMA COLUNA
+Sheets(1).Select
+Range("A1").Select
+Selection.End(xlToRight).Select
+Selection.End(xlDown).Select
+    'teste p saber se falta colunas
+    If (ActiveCell.Offset(2, 0).Value <> "") Then
+        linhaUm = ActiveCell.Row + 1
+        Cells(linhaUm, 5).Select
+        Range(Selection, Selection.End(xlToRight)).Cut
+        ActiveCell.Offset(0, 2).Select
+        ActiveSheet.Paste
+    End If
+
+' ORGANZAR OS DADOS E SEGUIR COM O RESTO DA MACRO (DELET COLS, ETC)
+    Range("C:C,D:D,E:E,F:F,I:I,J:J,G:G,K:K,L:L,M:M").Select
+    Selection.Delete Shift:=xlToLeft
+        Rows("1:1").Select
+        Selection.Insert Shift:=xlDown
+            Range("A1").Value = "OBRA"
+            Range("B1").Value = "MÊS"
+            Range("C1").Value = "REGULAR"
+            Range("D1").Value = "%"
+            Range("A1:D1").Select
+            Selection.Font.Bold = True
+    Cells.Select
+    Cells.EntireRow.AutoFit
+    Cells.EntireColumn.AutoFit
+    Range("A1").Select
+        
+End Sub
