@@ -1,4 +1,5 @@
 # ctc_autom
 Automações do dpto. Suprimentos. 
 
-1. Automação do processo de tratamento das bases extraídas do Protheus, usadas na construção dos relatórios.
+1. Transformação das bases extraídas do Protheus, usadas na construção dos relatórios.
+2. Organização dos dados transformados(1) para alimentar o BI.
