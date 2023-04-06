@@ -1,0 +1,68 @@
+Sub atualizarDadosBI(gestaoConsolidado As String)
+Dim mesAtual As String, last1months() As String, obras() As String, nObras As Integer, contRow As Integer, valores() As Double, i As Integer, Values2() As Double, Values3() As Double
+Dim consolidadoBase As String
+
+Application.ScreenUpdating = False
+
+Workbooks.Open ("M:\Suprimentos\4 - GESTÃO A VISTA\Macros\Macro - Gestão Média Condição de Pagamento\consolidado_gestão media.xlsx")
+consolidadoBase = ActiveWorkbook.Name
+
+    'atual
+    Workbooks(gestaoConsolidado).Sheets("Resumo").Activate
+    'Range(Range("A2"), Range("A2").End(xlToRight).Address, Range(Range("A2"), Range("A2").End(xlDown).Address)).ClearContents
+        mesAtual = Range("G11").End(xlDown).Offset(-1, 0).Value
+        nObras = Range(Range("H11"), Range("H11").End(xlToRight)).Columns.Count - 1
+        contRow = Range(Range("G11"), Range("G11").End(xlDown)).Rows.Count - 2
+        ReDim obras(nObras)
+        ReDim valores(nObras)
+        
+            For i = 0 To nObras
+                obras(i) = Range("H11").Offset(0, i).Value
+                valores(i) = Range("H11").Offset(contRow, i).Value
+            Next i
+            
+    Workbooks(consolidadoBase).Sheets("Atual").Activate
+    For i = 0 To nObras
+        Range("A2").Offset(i, 0).Value = obras(i)
+        Range("B2").Offset(i, 0).Value = mesAtual
+        Range("C2").Offset(i, 0).Value = valores(i)
+    Next i
+    Range("D2").Formula = "=VLOOKUP(B2,Calendário!$A$1:$B$13,2,0)"
+    Range("D2").AutoFill Destination:=Range("D2:D" & Range("A2").End(xlDown).Row)
+    
+    'ultimos 3 meses
+    Workbooks(gestaoConsolidado).Sheets("Resumo").Activate
+    contRow = Range(Range("G11"), Range("G11").End(xlDown)).Rows.Count - 2
+        ReDim last1months(2)
+        ReDim Values2(nObras)
+        ReDim Values3(nObras)
+            For i = 0 To 2
+                last1months(i) = Range("G11").Offset(contRow - i, 0).Value
+            Next i
+            For i = 0 To nObras
+                Values2(i) = Range("H11").Offset(contRow - 1, i).Value
+                Values3(i) = Range("H11").Offset(contRow - 2, i).Value
+            Next i
+            
+        Workbooks(consolidadoBase).Sheets("PastThreeMonths").Activate
+    For j = 0 To 2
+        Range("A2").Offset((j * 5) + j, 0).Select
+        For i = 0 To nObras
+            Selection.Offset(i, 0).Value = obras(i)
+            Selection.Offset(i, 1).Value = last1months(j)
+            If (j = 0) Then
+                Selection.Offset(i, 2).Value = valores(i)
+            ElseIf (j = 1) Then
+                Selection.Offset(i, 2).Value = Values2(i)
+            ElseIf (j = 2) Then
+                Selection.Offset(i, 2).Value = Values3(i)
+            End If
+        Next i
+    Next j
+    Range("D2").Formula = "=VLOOKUP(B2,Calendário!$A$1:$B$13,2,0)"
+    Range("D2").AutoFill Destination:=Range("D2:D" & Range("A2").End(xlDown).Row)
+    
+    Workbooks(consolidadoBase).Close SaveChanges:=True
+    Application.ScreenUpdating = True
+    
+End Sub
