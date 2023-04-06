@@ -1,0 +1,68 @@
+Sub Macro1()
+
+If Range("A1") <> "" Then
+    Range("A1:B1").Cut
+    Range("B1").Select
+    ActiveSheet.Paste
+End If
+
+'replace "," por "."
+    Range("F10").Select
+    Columns("B:B").EntireColumn.AutoFit
+    Cells.Replace What:=".", Replacement:=",", LookAt:=xlPart, SearchOrder _
+        :=xlByRows, MatchCase:=False, SearchFormat:=False, ReplaceFormat:=False _
+        , FormulaVersion:=xlReplaceFormula2
+
+    Range("A1").Value = "#"
+    Range("A7").Value = "#"
+    Range("A11").Value = "#"
+
+Range("A7").EntireRow.Select
+Selection.Insert Shift:=xlDown
+
+Range("A12").EntireRow.Select
+Selection.Insert Shift:=xlDown
+
+    Cells.Select
+    Cells.EntireRow.AutoFit
+    Cells.EntireColumn.AutoFit
+
+'Columns(1).EntireColumn.Delete
+
+'separando as bases de dados por sheet
+    'sheet1
+Sheets(1).Select
+Sheets(1).Name = "minutas_1"
+Range(Range("A1"), Range("A1").End(xlToRight).Address).Font.Bold = True
+Range("A1").Select
+
+    'sheet2
+Range(Range(Range("A8"), Range("A8").End(xlToRight).Address), Range(Range("A8"), Range("A8").End(xlDown).Address)).Select
+Selection.Cut
+    Sheets.Add After:=Sheets(1)
+    Sheets(2).Name = "minutas_2"
+    Range("A1").Select
+    ActiveSheet.Paste
+    Cells.Select
+    Cells.EntireRow.AutoFit
+    Cells.EntireColumn.AutoFit
+    Range(Range("A1"), Range("A1").End(xlToRight).Address).Font.Bold = True
+    Range("A1").Select
+
+    'sheet3
+Sheets(1).Select
+Range(Range(Range("A13"), Range("A13").End(xlToRight).Address), Range(Range("A13"), Range("A13").End(xlDown).Address)).Select
+Selection.Cut
+    Sheets.Add After:=Sheets(2)
+    Sheets(3).Name = "minutas_3"
+    Range("A1").Select
+    ActiveSheet.Paste
+    Cells.Select
+    Cells.EntireRow.AutoFit
+    Cells.EntireColumn.AutoFit
+    Range(Range("A1"), Range("A1").End(xlToRight).Address).Font.Bold = True
+    Range("A1").Select
+    
+Sheets(1).Activate
+
+End Sub
